@@ -1,0 +1,78 @@
+## Version 1.1.0 to 1.6.1
+---
+### What's New
+---
+* `POST` /admin/config/flushcache Manually flush the cache
+
+### What's Deprecated
+---
+
+### What's Changed
+---
+`GET` /admin/config/last-loaded Get details on the last time the config data was loaded
+    Return Type
+
+        Modify state
+`POST` /admin/config/reload Process the last uploaded config
+    Return Type
+
+        Modify state
+`GET` /dimensions/location-details Get details on a supplied location
+    Parameters
+
+        Add location.latitude //Latitude coordinate - accurate to 7 decimal spaces
+        Add location.longitude //Longitude coordinate - accurate to 7 decimal spaces
+        location.latitude Notes Latitude coordinate change into Latitude coordinate - accurate to 7 decimal spaces
+        location.longitude Notes Longitude coordinate change into Longitude coordinate - accurate to 7 decimal spaces
+    Return Type
+
+        Modify location.latitude //Latitude coordinate
+        Modify location.longitude //Longitude coordinate
+`POST` /orders Creates new order
+    Parameters
+
+        Insert orderRequest.endCustomerSiteDetails //Details on the hardware within the site
+        Insert orderRequest.sourceCircuitDetails //Details on the source site
+        Insert orderRequest.targetCircuitDetails //Details on the source site
+        Delete orderRequest.hardwareDetails //Details on the hardware within the site
+        Delete orderRequest.sourceSiteDetails //Details on the source site
+        Delete orderRequest.targetSiteDetails //Details on the source site
+`GET` /orders/{id} Get an order by id
+    Return Type
+
+        Insert endCustomerSiteDetails //The end customer site details
+        Insert rsp //The RSP that requested the quotation
+        Insert sourceCircuitDetails //The a-end circuit details
+        Insert targetCircuitDetails //The b-end circuit details
+        Delete hardwareDetails //The hardware connectivity details
+        Delete selectedQuotationFee
+        Delete sourceSiteDetails //The a-end site details
+        Delete targetSiteDetails //The b-end site details
+        Modify quotation.fees //The set of feeds for this quotation
+        Modify quotation.sourceEndLocation.latitude //Latitude coordinate
+        Modify quotation.sourceEndLocation.longitude //Longitude coordinate
+        Modify quotation.targetEndLocation.latitude //Latitude coordinate
+        Modify quotation.targetEndLocation.longitude //Longitude coordinate
+`POST` /quotations Creates new quotation
+    Parameters
+
+        Modify quotationRequest.sourceEnd.location.latitude //Latitude coordinate
+        Modify quotationRequest.sourceEnd.location.longitude //Longitude coordinate
+        Modify quotationRequest.targetEnd.location.latitude //Latitude coordinate
+        Modify quotationRequest.targetEnd.location.longitude //Longitude coordinate
+`POST` /quotations/requote/{id} Creates a new quotation based on an existing one
+    Parameters
+
+        Modify quotationRequest.sourceEnd.location.latitude //Latitude coordinate
+        Modify quotationRequest.sourceEnd.location.longitude //Longitude coordinate
+        Modify quotationRequest.targetEnd.location.latitude //Latitude coordinate
+        Modify quotationRequest.targetEnd.location.longitude //Longitude coordinate
+`GET` /quotations/{id} Finds quotation by id
+    Return Type
+
+        Modify fees //The set of feeds for this quotation
+        Modify sourceEndLocation.latitude //Latitude coordinate
+        Modify sourceEndLocation.longitude //Longitude coordinate
+        Modify targetEndLocation.latitude //Latitude coordinate
+        Modify targetEndLocation.longitude //Longitude coordinate
+

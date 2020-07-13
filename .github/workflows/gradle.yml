@@ -1,0 +1,45 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # clone and prepare the build
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Grant execute permission for gradlew
+        run: chmod +rx gradlew gradle/wrapper/gradle-wrapper.jar
+      # build and test
+      - name: Build with Gradle
+        run: ./gradlew build
+      - name: Coverage
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./build/reports/jacoco/test/jacocoTestReport.xml
+      # sign and release to sonatype
+      - name: Release to OSSRH
+        run: |
+          ./gradlew uploadArchives \
+            -PossrhUsername=${{ secrets.OSSRH_USERNAME }} \
+            -PossrhPassword=${{ secrets.OSSRH_PASSWORD }} \
+            -Psigning.secretKeyRingFile=.github/secring.gpg \
+            -Psigning.keyId=${{ secrets.GPG_KEY_ID }} \
+            -Psigning.password=${{ secrets.GPG_KEY_PASSWORD }}
+      - name: Release Gradle Plugin
+        run: |
+          ./gradlew publishPlugins \
+            -Pgradle.publish.key=${{ secrets.GRADLE_KEY }} \
+            -Pgradle.publish.secret=${{ secrets.GRADLE_SECRET }}
+
+
+

@@ -1,0 +1,42 @@
+=== Version 1.5.0 to 1.6.1
+
+
+
+==== New Endpoints
+
+'''
+
+==== Deprecated Endpoints
+
+'''
+
+==== Changed Endpoints
+
+
+`POST` /orders Creates new order
+
+Parameters
+
+
+
+    Insert orderRequest.endCustomerSiteDetails //Details on the hardware within the site
+    Insert orderRequest.sourceCircuitDetails //Details on the source site
+    Insert orderRequest.targetCircuitDetails //Details on the source site
+    Delete orderRequest.hardwareDetails //Details on the hardware within the site
+    Delete orderRequest.sourceSiteDetails //Details on the source site
+    Delete orderRequest.targetSiteDetails //Details on the source site
+
+
+`GET` /orders/{id} Get an order by id
+
+Return Type
+
+
+
+    Insert endCustomerSiteDetails //The end customer site details
+    Insert sourceCircuitDetails //The a-end circuit details
+    Insert targetCircuitDetails //The b-end circuit details
+    Delete hardwareDetails //The hardware connectivity details
+    Delete selectedQuotationFee
+    Delete sourceSiteDetails //The a-end site details
+    Delete targetSiteDetails //The b-end site details

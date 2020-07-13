@@ -8,23 +8,42 @@ on:
   workflow_dispatch:
     # Inputs the workflow accepts.
     inputs:
-      name:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'Person to greet'
-        # Default value if no value is explicitly provided
-        default: 'World'
-        # Input has to be provided for the workflow to run
-        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "greet"
-  greet:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+  build:
+    runs-on: ubuntu-latest
     steps:
-    # Runs a single command using the runners shell
-    - name: Send greeting
-      run: echo "Hello ${{ github.event.inputs.name }}"
+      # clone and prepare the build
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Grant execute permission for gradlew
+        run: chmod +rx gradlew gradle/wrapper/gradle-wrapper.jar
+      # build and test
+      - name: Build with Gradle
+        run: ./gradlew build
+      - name: Coverage
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./build/reports/jacoco/test/jacocoTestReport.xml
+      # sign and release to sonatype
+      - name: Release to OSSRH
+        run: |
+          ./gradlew uploadArchives \
+            -PossrhUsername=${{ secrets.OSSRH_USERNAME }} \
+            -PossrhPassword=${{ secrets.OSSRH_PASSWORD }} \
+            -Psigning.secretKeyRingFile=.github/secring.gpg \
+            -Psigning.keyId=${{ secrets.GPG_KEY_ID }} \
+            -Psigning.password=${{ secrets.GPG_KEY_PASSWORD }}
+
+      - name: Release Gradle Plugin
+        run: |
+          ./gradlew publishPlugins \
+            -Pgradle.publish.key=${{ secrets.GRADLE_KEY }} \
+            -Pgradle.publish.secret=${{ secrets.GRADLE_SECRET }}
+

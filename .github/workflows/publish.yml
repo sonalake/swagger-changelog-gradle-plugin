@@ -1,4 +1,6 @@
-name: Publish Release
+# This is a basic workflow that is manually triggered
+
+name: Publish Plugin
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
@@ -7,7 +9,9 @@ on:
     # Inputs the workflow accepts.
     inputs:
 
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -42,7 +46,4 @@ jobs:
           ./gradlew publishPlugins \
             -Pgradle.publish.key=${{ secrets.GRADLE_KEY }} \
             -Pgradle.publish.secret=${{ secrets.GRADLE_SECRET }}
-
-
-
 

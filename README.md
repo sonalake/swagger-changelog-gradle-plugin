@@ -125,3 +125,17 @@ swaggerChangeLog {
 }
 
 ```
+
+# CI
+
+There are two github actions defined for this:
+
+- [CI Build](https://github.com/sonalake/swagger-changelog-gradle-plugin/actions?query=workflow%3A%22CI+Build%22) - 
+    This is run on every commit to the main and development branches, and is limited to testing and coverage.
+- [Publish Plugin](https://github.com/sonalake/swagger-changelog-gradle-plugin/actions?query=workflow%3A%22Publish+Plugin%22) - 
+    This is run by triggering the action manually, and will - for non `SNAPSHOT` versions - sign the jars and 
+    publish them to the public maven repo and gradle.
+    
+    You will need access to the github secrets to run these actions, but you won't need 
+    to if you want to submit a pull request.
+

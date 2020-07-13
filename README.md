@@ -3,7 +3,6 @@
 [![CI Build](https://github.com/sonalake/swagger-changelog-gradle-plugin/workflows/CI%20Build/badge.svg)](https://github.com/sonalake/swagger-changelog-gradle-plugin)
 [![codecov](https://codecov.io/gh/sonalake/swagger-changelog-gradle-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/sonalake/swagger-changelog-gradle-plugin)
 
-
 A gradle pluging for generating an asciidoc docset for a
 changelog across different versions of a swagger API.
 

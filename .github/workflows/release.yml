@@ -1,9 +1,11 @@
 name: Publish Release
 
-# github actions require some kind of branch here
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
 on:
-  push:
-    branches: [ not_a_real_branch ]
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
 
 jobs:
   build:
@@ -34,19 +36,13 @@ jobs:
             -Psigning.secretKeyRingFile=.github/secring.gpg \
             -Psigning.keyId=${{ secrets.GPG_KEY_ID }} \
             -Psigning.password=${{ secrets.GPG_KEY_PASSWORD }}
-        # we will fail if the plugin was already published
-        # we want to allow for this error in case we want to
-        # update the readme
-        continue-on-error: true
+
       - name: Release Gradle Plugin
         run: |
           ./gradlew publishPlugins \
             -Pgradle.publish.key=${{ secrets.GRADLE_KEY }} \
             -Pgradle.publish.secret=${{ secrets.GRADLE_SECRET }}
-        # we will fail if the plugin was already published
-        # we want to allow for this error in case we want to
-        # update the readme
-        continue-on-error: true
+
 
 
 

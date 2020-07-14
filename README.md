@@ -3,8 +3,9 @@
 [![CI Build](https://github.com/sonalake/swagger-changelog-gradle-plugin/workflows/CI%20Build/badge.svg)](https://github.com/sonalake/swagger-changelog-gradle-plugin)
 [![codecov](https://codecov.io/gh/sonalake/swagger-changelog-gradle-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/sonalake/swagger-changelog-gradle-plugin)
 
-A gradle pluging for generating an asciidoc docset for a
-changelog across different versions of a swagger API.
+A gradle plugin, developed by [Sonalake](https://sonalake.com) that scans a nexus repository 
+for historical versions of a swagger.json for some project, and produces an asciidoc formatted
+changelog from it.
 
 Assumes that:
 
@@ -138,4 +139,3 @@ There are two github actions defined for this:
     
     You will need access to the github secrets to run these actions, but you won't need 
     to if you want to submit a pull request.
-

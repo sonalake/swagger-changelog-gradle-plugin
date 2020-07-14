@@ -156,6 +156,14 @@ if (isForOssrhPublishing) {
             }
           }
 
+          developers {
+            developer {
+              id 'daniel-bray-sonalake'
+              name 'Daniel Bray'
+              email 'daniel.bray@sonatype.com'
+            }
+          }
+
         }
       }
     }

@@ -28,6 +28,7 @@ public class ScannerTest {
 
   public static final String GROUP_ID = "a";
   public static final String ARTIFACT_ID = "b";
+  public static final String CLASSIFIER_ID = "c";
 
   @Test
   public void test() throws Exception {
@@ -51,6 +52,49 @@ public class ScannerTest {
     // then the query was valid
     verify(request).queryString(eq("g"), eq(GROUP_ID));
     verify(request).queryString(eq("a"), eq(ARTIFACT_ID));
+
+    // and the results parse ok
+    assertEquals(2, history.size());
+    assertEquals(
+      VersionStep.builder()
+        .from(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.1").build())
+        .to(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.2.3").build())
+        .build(),
+      history.get(0)
+    );
+    assertEquals(
+      VersionStep.builder()
+        .from(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.2.3").build())
+        .to(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).path("snapshot-file").build())
+        .build(),
+      history.get(1)
+    );
+  }
+
+
+  @Test
+  public void testWithClassifier() throws Exception {
+    GetRequest request = givenNexusResponse("{ \"data\": [" + artifact("a", "b", "1.2.3") + "," + artifact("a", "b", "1.1") + "] }");
+
+    // given this config
+    List<VersionStep> history = Scanner.builder()
+      .config(Config.builder()
+        .artifact(Artifact.builder()
+          .groupId(GROUP_ID)
+          .artifactId(ARTIFACT_ID)
+          .classifier(CLASSIFIER_ID)
+          .build())
+        .nexusHome("http://nexus/there")
+        .target(Target.builder().targetdir("/tmp/here").build())
+        .snapshotVersionFile("snapshot-file")
+        .build())
+      .build()
+      .getHistory();
+
+    // then the query was valid
+    verify(request).queryString(eq("g"), eq(GROUP_ID));
+    verify(request).queryString(eq("a"), eq(ARTIFACT_ID));
+    verify(request).queryString(eq("c"), eq(CLASSIFIER_ID));
 
     // and the results parse ok
     assertEquals(2, history.size());

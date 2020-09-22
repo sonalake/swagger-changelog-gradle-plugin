@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.HttpRequest;
+import com.sonalake.swaggerlog.config.Artifact;
 import com.sonalake.swaggerlog.config.Config;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Queries nexus for the swagger docs for a given artifact, sorts them, and then
@@ -43,13 +46,19 @@ public class Scanner {
    */
   private HttpResponse<String> queryForSwaggerDocs() {
     try {
-      return Unirest.get(config.getNexusSearchPath())
+      // build a basic query
+      HttpRequest builder = Unirest.get(config.getNexusSearchPath())
         .header("accept", "application/json")
         .queryString("g", config.getArtifact().getGroupId())
         .queryString("a", config.getArtifact().getArtifactId())
         .queryString("p", "json")
-        .queryString("repositoryId", config.getRepositoryId())
-        .asString();
+        .queryString("repositoryId", config.getRepositoryId());
+
+      // if someone has asked for a classifier, then use it
+      if (isNotBlank(config.getArtifact().getClassifier())) {
+        builder.queryString("c", config.getArtifact().getClassifier());
+      }
+      return builder.asString();
     } catch (UnirestException e) {
       throw new IllegalArgumentException("Failed to query for docs at: " + config, e);
     }
@@ -110,4 +119,5 @@ public class Scanner {
       version.getVersion()
     );
   }
+
 }

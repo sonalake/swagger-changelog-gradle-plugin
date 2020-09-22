@@ -145,6 +145,7 @@ public class ScannerTest {
       Config.builder()
         .nexusHome("http://atlanta.sonalake.corp:8081/nexus")
         .repositoryId("releases")
+        .artifact(Artifact.builder().build())
         .build()
     ).build();
 
@@ -164,13 +165,15 @@ public class ScannerTest {
       Config.builder()
         .nexusHome("http://atlanta.sonalake.corp:8081/nexus")
         .repositoryId("releases")
+        .artifact(Artifact.builder()
+          .classifier("openapi")
+          .build())
         .build()
     ).build();
 
     VersionedArtifact version = VersionedArtifact.builder()
       .group("com.sonalake")
       .artifact("order-state-service")
-      .classifier("openapi")
       .version("1.0.1")
       .build();
 

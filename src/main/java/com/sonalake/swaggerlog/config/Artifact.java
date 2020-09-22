@@ -13,4 +13,5 @@ import lombok.*;
 public class Artifact {
   private final String groupId;
   private final String artifactId;
+  private final String classifier;
 }

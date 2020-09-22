@@ -39,6 +39,12 @@ public class ChangelogExtension {
    */
   private String repositoryId;
 
+
+  /**
+   * The classifier id - defaults to nothing
+   */
+  private String classifier;
+
   /**
    * The directory into which the diff files and index will be written
    */
@@ -66,14 +72,15 @@ public class ChangelogExtension {
       .repositoryId(getRepositoryId())
       .target(buildTarget())
       .snapshotVersionFile(getSnapshotVersionFile())
-      .artifact(buildArtifact()
-      ).build();
+      .artifact(buildArtifact())
+      .build();
   }
 
   private Artifact buildArtifact() {
     return Artifact.builder()
       .groupId(getGroupId())
       .artifactId(getArtifactId())
+      .classifier(getClassifier())
       .build();
   }
 

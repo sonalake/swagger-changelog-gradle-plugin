@@ -103,8 +103,9 @@ swaggerChangeLog {
    
     // this is assumed to be in the json format
     groupId = 'com.sonalake'
-    artifactId = 'esqt-server-API'
-    
+    artifactId = 'app-server'
+    classifier = 'swagger'
+
     // where to find the nexus repo
     nexusHome = 'http://atlanta.sonalake.corp:8081/nexus'
     repositoryId = 'releases'

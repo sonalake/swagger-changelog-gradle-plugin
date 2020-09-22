@@ -34,6 +34,7 @@ public class Scanner {
    * @return the list of versions
    */
   public List<VersionStep> getHistory() {
+    log.debug("Generating history now");
     HttpResponse<String> search = queryForSwaggerDocs();
     SearchResults versions = parseSearchResults(search);
     appendSnapshotToHistory(versions);
@@ -59,6 +60,7 @@ public class Scanner {
       if (isNotBlank(config.getArtifact().getClassifier())) {
         builder.queryString("c", config.getArtifact().getClassifier());
       }
+
       return builder.asString();
     } catch (UnirestException e) {
       throw new IllegalArgumentException("Failed to query for docs at: " + config, e);
@@ -114,9 +116,9 @@ public class Scanner {
 
     // derive the classifier URL element
     // if there is no classifier we're fine, otherwise we need a "-$classifier" at the end
-    String classifierUrlElement = isBlank(version.getClassifier())
+    String classifierUrlElement = isBlank(this.config.getArtifact().getClassifier())
       ? ""
-      : "-" + version.getClassifier();
+      : "-" + this.config.getArtifact().getClassifier();
 
     return String.format("%s/%s/%s/%s/%s-%s%s.json",
       config.getNexusDownloadPath("releases"),

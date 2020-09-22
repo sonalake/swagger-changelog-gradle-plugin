@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 
 import static com.deepoove.swagger.diff.SwaggerDiff.compareV2;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Given the config, collect and sort the swaggers from nexus, and produce both the diffs and their index file.
@@ -57,7 +58,12 @@ public class LogGenerator {
    */
   private SwaggerDiff buildSwaggerDiff(Scanner scanner, VersionStep step) {
     log.debug("Examining step {}", step);
-    return compareV2(scanner.getVersionUri(step.getFrom()), scanner.getVersionUri(step.getTo()));
+    String fromUri = scanner.getVersionUri(step.getFrom());
+    String toUri = scanner.getVersionUri(step.getTo());
+
+    log.debug("Diffing urls {} -> {}", fromUri, toUri);
+
+    return compareV2(fromUri, toUri);
   }
 
   /**

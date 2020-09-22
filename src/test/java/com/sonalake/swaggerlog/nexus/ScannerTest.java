@@ -139,6 +139,46 @@ public class ScannerTest {
     assertEquals(error.getMessage(), format("Failed to parse results from nexus: %s", config));
   }
 
+  @Test
+  public void testVersionUri() {
+    Scanner scanner = Scanner.builder().config(
+      Config.builder()
+        .nexusHome("http://atlanta.sonalake.corp:8081/nexus")
+        .repositoryId("releases")
+        .build()
+    ).build();
+
+    VersionedArtifact version = VersionedArtifact.builder()
+      .group("com.sonalake")
+      .artifact("esqt-server-API")
+      .version("1.0.1")
+      .build();
+
+    String observedUri = scanner.getVersionUri(version);
+    assertEquals("Wrong uri", "http://atlanta.sonalake.corp:8081/nexus/service/local/repositories/releases/content/com/sonalake/esqt-server-API/1.0.1/esqt-server-API-1.0.1.json", observedUri);
+  }
+
+  @Test
+  public void testVersionUriWithClassifier() {
+    Scanner scanner = Scanner.builder().config(
+      Config.builder()
+        .nexusHome("http://atlanta.sonalake.corp:8081/nexus")
+        .repositoryId("releases")
+        .build()
+    ).build();
+
+    VersionedArtifact version = VersionedArtifact.builder()
+      .group("com.sonalake")
+      .artifact("order-state-service")
+      .classifier("openapi")
+      .version("1.0.1")
+      .build();
+
+    String observedUri = scanner.getVersionUri(version);
+    assertEquals("Wrong uri", "http://atlanta.sonalake.corp:8081/nexus/service/local/repositories/releases/content/com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1-openapi.json", observedUri);
+  }
+
+
   private GetRequest givenNexusResponse(String responseData) throws Exception {
     mockStatic(Unirest.class);
     HttpResponse response = mock(HttpResponse.class);

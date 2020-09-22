@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
@@ -110,13 +111,21 @@ public class Scanner {
     if (version.isSnapshot()) {
       return version.getPath();
     }
-    return String.format("%s/%s/%s/%s/%s-%s.json",
+
+    // derive the classifier URL element
+    // if there is no classifier we're fine, otherwise we need a "-$classifier" at the end
+    String classifierUrlElement = isBlank(version.getClassifier())
+      ? ""
+      : "-" + version.getClassifier();
+
+    return String.format("%s/%s/%s/%s/%s-%s%s.json",
       config.getNexusDownloadPath("releases"),
       version.getGroup().replace('.', '/'),
       version.getArtifact(),
       version.getVersion(),
       version.getArtifact(),
-      version.getVersion()
+      version.getVersion(),
+      classifierUrlElement
     );
   }
 

@@ -3,9 +3,11 @@ plugins {
   id 'com.github.kt3k.coveralls' version '2.10.1'
   id 'java-gradle-plugin'
   id 'com.gradle.plugin-publish' version '0.12.0'
+  id "io.freefair.lombok" version "4.1.6"
+
 }
 group = 'com.sonalake'
-version = '1.0.0'
+version = '1.0.1'
 sourceCompatibility = '11'
 
 
@@ -41,11 +43,8 @@ configurations.all {
   exclude group: 'org.slf4j', module: 'slf4j-log4j12'
 }
 dependencies {
-  // lombok needs both for gradle 5 - future proofing here ;)
-  annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
-  compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
 
-  // used to get data from nexus, and turn results into POJOs
+   // used to get data from nexus, and turn results into POJOs
   compile group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
   compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
   compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
@@ -56,10 +55,6 @@ dependencies {
 
   // used to sort versions
   compile 'se.sawano.java:alphanumeric-comparator:1.4.1'
-
-  // we use lombok in some tests
-  testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
-  testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
 
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'

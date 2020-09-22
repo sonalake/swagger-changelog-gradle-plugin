@@ -32,6 +32,9 @@ public class VersionedArtifact implements Comparable<VersionedArtifact> {
   @JsonProperty("version")
   private String version;
 
+  @JsonProperty("classifier")
+  private String classifier;
+
   private String path;
 
   /**

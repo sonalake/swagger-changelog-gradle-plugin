@@ -4,7 +4,10 @@ plugins {
   id 'java-gradle-plugin'
   id 'com.gradle.plugin-publish' version '0.12.0'
   id "io.freefair.lombok" version "4.1.6"
-
+}
+repositories {
+  mavenCentral()
+  jcenter()
 }
 group = 'com.sonalake'
 version = '1.0.4-SNAPSHOT'

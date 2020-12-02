@@ -15,7 +15,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 
 import static com.deepoove.swagger.diff.SwaggerDiff.compareV2;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Given the config, collect and sort the swaggers from nexus, and produce both the diffs and their index file.

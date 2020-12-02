@@ -7,14 +7,18 @@ import com.mashape.unirest.request.GetRequest;
 import com.sonalake.swaggerlog.config.Artifact;
 import com.sonalake.swaggerlog.config.Config;
 import com.sonalake.swaggerlog.config.Target;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static java.lang.String.format;
+import static java.lang.Thread.currentThread;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -26,14 +30,14 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @PrepareForTest(Unirest.class)
 public class ScannerTest {
 
-  public static final String GROUP_ID = "a";
-  public static final String ARTIFACT_ID = "b";
-  public static final String CLASSIFIER_ID = "c";
+  public static final String GROUP_ID = "com.sonalake";
+  public static final String ARTIFACT_ID = "order-state-service";
+  public static final String CLASSIFIER_ID = "openapi";
 
   @Test
-  public void test() throws Exception {
+  public void testV2() throws Exception {
 
-    GetRequest request = givenNexusResponse("{ \"data\": [" + artifact("a", "b", "1.2.3") + "," + artifact("a", "b", "1.1") + "] }");
+    GetRequest request = givenNexusResponse(fromResource("results.v2.json"));
 
     // given this config
     List<VersionStep> history = Scanner.builder()
@@ -57,14 +61,21 @@ public class ScannerTest {
     assertEquals(2, history.size());
     assertEquals(
       VersionStep.builder()
-        .from(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.1").build())
-        .to(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.2.3").build())
+        .from(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID)
+          .version("1.0.1")
+          .downloadFrom("http://nexus/service/local/repositories/releases/content/com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1.json")
+          .build())
+        .to(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.0.2")
+          .downloadFrom("http://nexus/service/local/repositories/releases/content/com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2.json")
+          .build())
         .build(),
       history.get(0)
     );
     assertEquals(
       VersionStep.builder()
-        .from(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.2.3").build())
+        .from(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.0.2")
+          .downloadFrom("http://nexus/service/local/repositories/releases/content/com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2.json")
+          .build())
         .to(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).path("snapshot-file").build())
         .build(),
       history.get(1)
@@ -73,8 +84,8 @@ public class ScannerTest {
 
 
   @Test
-  public void testWithClassifier() throws Exception {
-    GetRequest request = givenNexusResponse("{ \"data\": [" + artifact("a", "b", "1.2.3") + "," + artifact("a", "b", "1.1") + "] }");
+  public void testWithClassifierV2() throws Exception {
+    GetRequest request = givenNexusResponse(fromResource("results.v2.json"));
 
     // given this config
     List<VersionStep> history = Scanner.builder()
@@ -85,6 +96,7 @@ public class ScannerTest {
           .classifier(CLASSIFIER_ID)
           .build())
         .nexusHome("http://nexus/there")
+        .repositoryId("releases")
         .target(Target.builder().targetdir("/tmp/here").build())
         .snapshotVersionFile("snapshot-file")
         .build())
@@ -100,18 +112,28 @@ public class ScannerTest {
     assertEquals(2, history.size());
     assertEquals(
       VersionStep.builder()
-        .from(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.1").build())
-        .to(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.2.3").build())
+        .from(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.0.1")
+          .downloadFrom("http://nexus/service/local/repositories/releases/content/com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1-openapi.json")
+          .build())
+        .to(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.0.2")
+          .downloadFrom("http://nexus/service/local/repositories/releases/content/com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2-openapi.json")
+          .build())
         .build(),
       history.get(0)
     );
     assertEquals(
       VersionStep.builder()
-        .from(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.2.3").build())
+        .from(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.0.2")
+          .downloadFrom("http://nexus/service/local/repositories/releases/content/com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2-openapi.json")
+          .build())
         .to(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).path("snapshot-file").build())
         .build(),
       history.get(1)
     );
+  }
+
+  private String fromResource(String name) throws IOException {
+    return IOUtils.toString(currentThread().getContextClassLoader().getResource(name), StandardCharsets.UTF_8);
   }
 
   @Test
@@ -136,50 +158,10 @@ public class ScannerTest {
       .build()
       .getHistory());
 
-    assertEquals(error.getMessage(), format("Failed to parse results from nexus: %s", config));
+    assertEquals(format("Failed to parse results from nexus: %s", config), error.getMessage());
   }
 
-  @Test
-  public void testVersionUri() {
-    Scanner scanner = Scanner.builder().config(
-      Config.builder()
-        .nexusHome("http://atlanta.sonalake.corp:8081/nexus")
-        .repositoryId("releases")
-        .artifact(Artifact.builder().build())
-        .build()
-    ).build();
 
-    VersionedArtifact version = VersionedArtifact.builder()
-      .group("com.sonalake")
-      .artifact("esqt-server-API")
-      .version("1.0.1")
-      .build();
-
-    String observedUri = scanner.getVersionUri(version);
-    assertEquals("Wrong uri", "http://atlanta.sonalake.corp:8081/nexus/service/local/repositories/releases/content/com/sonalake/esqt-server-API/1.0.1/esqt-server-API-1.0.1.json", observedUri);
-  }
-
-  @Test
-  public void testVersionUriWithClassifier() {
-    Scanner scanner = Scanner.builder().config(
-      Config.builder()
-        .nexusHome("http://atlanta.sonalake.corp:8081/nexus")
-        .repositoryId("releases")
-        .artifact(Artifact.builder()
-          .classifier("openapi")
-          .build())
-        .build()
-    ).build();
-
-    VersionedArtifact version = VersionedArtifact.builder()
-      .group("com.sonalake")
-      .artifact("order-state-service")
-      .version("1.0.1")
-      .build();
-
-    String observedUri = scanner.getVersionUri(version);
-    assertEquals("Wrong uri", "http://atlanta.sonalake.corp:8081/nexus/service/local/repositories/releases/content/com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1-openapi.json", observedUri);
-  }
 
 
   private GetRequest givenNexusResponse(String responseData) throws Exception {
@@ -200,4 +182,105 @@ public class ScannerTest {
 
     );
   }
+
+
+  @Test
+  public void testV3() throws Exception {
+
+    GetRequest request = givenNexusResponse(fromResource("results.v3.json"));
+
+    // given this config
+    List<VersionStep> history = Scanner.builder()
+      .config(Config.builder()
+        .isVersion3(true)
+        .artifact(Artifact.builder()
+          .groupId(GROUP_ID)
+          .artifactId(ARTIFACT_ID)
+          .build())
+        .nexusHome("http://nexus/there")
+        .target(Target.builder().targetdir("/tmp/here").build())
+        .snapshotVersionFile("snapshot-file")
+        .build())
+      .build()
+      .getHistory();
+
+    // then the query was valid
+    verify(request).queryString(eq("group"), eq(GROUP_ID));
+    verify(request).queryString(eq("maven.artifactId"), eq(ARTIFACT_ID));
+
+    // and the results parse ok
+    assertEquals(2, history.size());
+    assertEquals(
+      VersionStep.builder()
+        .from(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID)
+          .version("1.0.1")
+          .downloadFrom("http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1-openapi.json")
+          .build())
+        .to(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.0.2")
+          .downloadFrom("http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2-openapi.json")
+          .build())
+        .build(),
+      history.get(0)
+    );
+    assertEquals(
+      VersionStep.builder()
+        .from(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.0.2")
+          .downloadFrom("http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2-openapi.json")
+          .build())
+        .to(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).path("snapshot-file").build())
+        .build(),
+      history.get(1)
+    );
+  }
+
+  @Test
+  public void testV3WithClassifier() throws Exception {
+
+    GetRequest request = givenNexusResponse(fromResource("results.v3.json"));
+
+    // given this config
+    List<VersionStep> history = Scanner.builder()
+      .config(Config.builder()
+        .isVersion3(true)
+        .artifact(Artifact.builder()
+          .groupId(GROUP_ID)
+          .artifactId(ARTIFACT_ID)
+          .classifier(CLASSIFIER_ID)
+          .build())
+        .nexusHome("http://nexus/there")
+        .target(Target.builder().targetdir("/tmp/here").build())
+        .snapshotVersionFile("snapshot-file")
+        .build())
+      .build()
+      .getHistory();
+
+    // then the query was valid
+    verify(request).queryString(eq("group"), eq(GROUP_ID));
+    verify(request).queryString(eq("maven.artifactId"), eq(ARTIFACT_ID));
+
+    // and the results parse ok
+    assertEquals(2, history.size());
+    assertEquals(
+      VersionStep.builder()
+        .from(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID)
+          .version("1.0.1")
+          .downloadFrom("http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1-openapi.json")
+          .build())
+        .to(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.0.2")
+          .downloadFrom("http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2-openapi.json")
+          .build())
+        .build(),
+      history.get(0)
+    );
+    assertEquals(
+      VersionStep.builder()
+        .from(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).version("1.0.2")
+          .downloadFrom("http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2-openapi.json")
+          .build())
+        .to(VersionedArtifact.builder().group(GROUP_ID).artifact(ARTIFACT_ID).path("snapshot-file").build())
+        .build(),
+      history.get(1)
+    );
+  }
+
 }

@@ -125,6 +125,11 @@ public class LogGeneratorTest {
   }
 
   private VersionedArtifact artifact(String version) {
-    return VersionedArtifact.builder().group("groupA").artifact("thisIsId").version(version).build();
+    return VersionedArtifact.builder()
+      .group("groupA")
+      .artifact("thisIsId")
+      .version(version)
+      .downloadFrom(String.format("http://nexus/there/groupA/thisIsId/%s/thisIsId-%s.json", version, version))
+      .build();
   }
 }

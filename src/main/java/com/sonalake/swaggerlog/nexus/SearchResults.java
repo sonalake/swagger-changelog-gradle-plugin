@@ -1,7 +1,5 @@
 package com.sonalake.swaggerlog.nexus;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -12,14 +10,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 class SearchResults {
   @Singular
-  @JsonProperty("data")
+
   private List<VersionedArtifact> versions;
+
 
   public List<VersionStep> buildHistory() {
 
@@ -51,7 +49,5 @@ class SearchResults {
     return steps;
   }
 
-  public void addSnapshot(VersionedArtifact snapshot) {
-    versions.add(snapshot);
-  }
+
 }

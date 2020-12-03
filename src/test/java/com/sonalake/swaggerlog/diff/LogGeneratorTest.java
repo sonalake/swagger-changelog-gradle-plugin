@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -116,6 +117,41 @@ public class LogGeneratorTest {
 
   }
 
+  @Test
+  public void testWithNoVersionData() throws Exception {
+    mockStatic(SwaggerDiff.class);
+    Config config = Config.builder()
+      .artifact(Artifact.builder()
+        .groupId("groupy")
+        .artifactId("covenant")
+        .build())
+      .nexusHome("http://nexus/there")
+      .target(Target.builder().targetdir(Files.createTempDirectory("LogGeneratorTest").toString()).build())
+      .build();
+
+    Scanner scanner = spy(Scanner.builder()
+      .config(config)
+      .build());
+
+    // given no history
+    doReturn(emptyList()).when(scanner).getHistory();
+
+    LogGenerator generator = spy(LogGenerator.builder().config(config).build());
+    doReturn(scanner).when(generator).buildScanner();
+
+    generator.generateChangeLog();
+
+    log.debug(config.getTarget().getTargetdir());
+
+    List<String> files = Files.readAllLines(Paths.get(config.getTarget().getTargetdir(), LogGenerator.CHANGE_LOG_ADOC));
+    assertEquals(
+      asList(
+        "No change history available"
+      ),
+      files
+    );
+  }
+
   private Endpoint get(String path, String summary) {
     Endpoint end = new Endpoint();
     end.setMethod(HttpMethod.GET);
@@ -125,6 +161,11 @@ public class LogGeneratorTest {
   }
 
   private VersionedArtifact artifact(String version) {
-    return VersionedArtifact.builder().group("groupA").artifact("thisIsId").version(version).build();
+    return VersionedArtifact.builder()
+      .group("groupA")
+      .artifact("thisIsId")
+      .version(version)
+      .downloadFrom(String.format("http://nexus/there/groupA/thisIsId/%s/thisIsId-%s.json", version, version))
+      .build();
   }
 }

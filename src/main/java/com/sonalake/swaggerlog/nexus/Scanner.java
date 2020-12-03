@@ -2,11 +2,8 @@ package com.sonalake.swaggerlog.nexus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.HttpRequest;
-import com.sonalake.swaggerlog.config.Artifact;
 import com.sonalake.swaggerlog.config.Config;
+import com.sonalake.swaggerlog.nexus.formats.VersionFinder;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +12,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Queries nexus for the swagger docs for a given artifact, sorts them, and then
@@ -35,44 +30,19 @@ public class Scanner {
    */
   public List<VersionStep> getHistory() {
     log.debug("Generating history now");
-    HttpResponse<String> search = queryForSwaggerDocs();
-    SearchResults versions = parseSearchResults(search);
-    appendSnapshotToHistory(versions);
+    List<VersionedArtifact> artifacts = new VersionFinder().findVersions(config);
+    appendSnapshotToHistory(artifacts);
+    SearchResults versions = SearchResults.builder().versions(artifacts).build();
+
     return versions.buildHistory();
-  }
-
-  /**
-   * Find all the swagger docs.
-   *
-   * @return the raw json result for the query
-   */
-  private HttpResponse<String> queryForSwaggerDocs() {
-    try {
-      // build a basic query
-      HttpRequest builder = Unirest.get(config.getNexusSearchPath())
-        .header("accept", "application/json")
-        .queryString("g", config.getArtifact().getGroupId())
-        .queryString("a", config.getArtifact().getArtifactId())
-        .queryString("p", "json")
-        .queryString("repositoryId", config.getRepositoryId());
-
-      // if someone has asked for a classifier, then use it
-      if (isNotBlank(config.getArtifact().getClassifier())) {
-        builder.queryString("c", config.getArtifact().getClassifier());
-      }
-
-      return builder.asString();
-    } catch (UnirestException e) {
-      throw new IllegalArgumentException("Failed to query for docs at: " + config, e);
-    }
   }
 
   /**
    * If there is a snapshot, then add it to the search results
    *
-   * @param versions the discovered versions
+   * @param artifacts the discovered versions
    */
-  private void appendSnapshotToHistory(SearchResults versions) {
+  private void appendSnapshotToHistory( List<VersionedArtifact> artifacts) {
     ofNullable(config.getSnapshotVersionFile()).ifPresent(path -> {
       VersionedArtifact version = VersionedArtifact.builder()
         .group(config.getArtifact().getGroupId())
@@ -80,7 +50,7 @@ public class Scanner {
         .path(path)
         .build();
       log.debug("Adding local snapshot file to version history");
-      versions.addSnapshot(version);
+      artifacts.add(version);
     });
   }
 
@@ -114,21 +84,7 @@ public class Scanner {
       return version.getPath();
     }
 
-    // derive the classifier URL element
-    // if there is no classifier we're fine, otherwise we need a "-$classifier" at the end
-    String classifierUrlElement = isBlank(this.config.getArtifact().getClassifier())
-      ? ""
-      : "-" + this.config.getArtifact().getClassifier();
-
-    return String.format("%s/%s/%s/%s/%s-%s%s.json",
-      config.getNexusDownloadPath("releases"),
-      version.getGroup().replace('.', '/'),
-      version.getArtifact(),
-      version.getVersion(),
-      version.getArtifact(),
-      version.getVersion(),
-      classifierUrlElement
-    );
+    return version.getDownloadFrom();
   }
 
 }

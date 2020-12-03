@@ -123,7 +123,12 @@ swaggerChangeLog {
     // (optional) from what level should the chapters 
     // start at. By default, they will start at level 3, 
     // i.e. "==="
-    baseChapterLevel = 3    
+    baseChapterLevel = 3
+
+    // (optional) the app assumes, for backwards-compatibility
+    // reasons that the target nexus is version 2set this to true
+    // if the target is version 3+
+    isNexusVersion3 = true
 }
 
 ```

@@ -1,0 +1,161 @@
+{
+  "items": [
+    {
+      "id": "c2FtcGxlLXJlcG86ZDhjMjBmZWQwZWJlM2VlZjBmYjE0ZjQ3MjFhNzBhNTI",
+      "repository": "sample-repo",
+      "format": "maven2",
+      "group": "com.sonalake",
+      "name": "order-state-service",
+      "version": "1.0.1",
+      "assets": [
+        {
+          "downloadUrl": "http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1-openapi.json",
+          "path": "com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1-openapi.json",
+          "id": "c2FtcGxlLXJlcG86ZDgzMzAwNWQ0OWMzNDhlODMzZmEyZGFkNzY5ZTAzZWU",
+          "repository": "sample-repo",
+          "format": "maven2",
+          "checksum": {
+            "sha1": "345e595e0e22d8bb635bf8977a5fe1ee04c09715",
+            "sha256": "1ef2ed56af2d163c932c1d7bb5f1c9960716832f2fe664e10d457e4e1bcd46f3",
+            "sha512": "ac3c7960d5d149e1d0a0ca0fc004f0f834121fb35a4a407b034d0282f2a0c341c870ef79ebb5c7e31e08465007a00b4b17b85444d7c4a8839f0f097b14b33c70",
+            "md5": "591938b6b4c23d9fe767e5c7fe527837"
+          }
+        },
+        {
+          "downloadUrl": "http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1-openapi.json.md5",
+          "path": "com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1-openapi.json.md5",
+          "id": "c2FtcGxlLXJlcG86YmQ3Zjc5ZTE5NjczMDUwODA3MWMwYzQyNjI5Zjg0ZGM",
+          "repository": "sample-repo",
+          "format": "maven2",
+          "checksum": {
+            "sha1": "24d06f8e65be82c2cea12b68bad5c53a7993acda",
+            "md5": "b94d6a0b72121f8d823d6d2ce3fb3071"
+          }
+        },
+        {
+          "downloadUrl": "http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1-openapi.json.sha1",
+          "path": "com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1-openapi.json.sha1",
+          "id": "c2FtcGxlLXJlcG86MjdiOTA0YmE0MzFkOWU1ZTBhNzU5MDc0NzAwYWUxZTM",
+          "repository": "sample-repo",
+          "format": "maven2",
+          "checksum": {
+            "sha1": "66db2debdb5d9d9d46905500a63525d641c9fa64",
+            "md5": "39ac3de4bab392443c80590f1b8151a6"
+          }
+        },
+        {
+          "downloadUrl": "http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1.pom",
+          "path": "com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1.pom",
+          "id": "c2FtcGxlLXJlcG86ZjhiOWE3ZmEzZWYwN2FiMDg5OTlmZTJmODlmNTBhOWI",
+          "repository": "sample-repo",
+          "format": "maven2",
+          "checksum": {
+            "sha1": "c42dddc9277471e26a2c2e5e6f57d6e1a969af8e",
+            "md5": "8b9f6a12aeef49d58eef500befbe2563"
+          }
+        },
+        {
+          "downloadUrl": "http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1.pom.md5",
+          "path": "com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1.pom.md5",
+          "id": "c2FtcGxlLXJlcG86MWUwNjFhNDcxMTg2ZmVlZjcyODUxMWY4NTk1NGVlYjA",
+          "repository": "sample-repo",
+          "format": "maven2",
+          "checksum": {
+            "sha1": "baef3f1c25cbcaa1e138507059e359a85309f02a",
+            "md5": "9558a733a37423f1a564035001470b1e"
+          }
+        },
+        {
+          "downloadUrl": "http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1.pom.sha1",
+          "path": "com/sonalake/order-state-service/1.0.1/order-state-service-1.0.1.pom.sha1",
+          "id": "c2FtcGxlLXJlcG86MjQ2YTBiNjc1ZDc3MTJmYmEzMmU5YmZiMjlhZGVhZjQ",
+          "repository": "sample-repo",
+          "format": "maven2",
+          "checksum": {
+            "sha1": "4fa3beca70f0b18c9dd1fc40375d46c19d7fa333",
+            "md5": "61e5e98c08705f432d2fdd806c9cd713"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c2FtcGxlLXJlcG86M2NmYTU3ZjMwZTEzZTE4ZjI2MGY1ODY5YzUwM2EzN2M",
+      "repository": "sample-repo",
+      "format": "maven2",
+      "group": "com.sonalake",
+      "name": "order-state-service",
+      "version": "1.0.2",
+      "assets": [
+        {
+          "downloadUrl": "http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2-openapi.json",
+          "path": "com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2-openapi.json",
+          "id": "c2FtcGxlLXJlcG86NGRhN2E3YWJiMGI0ODIwMzA4MDU5YTZiZGE0ODkzYTE",
+          "repository": "sample-repo",
+          "format": "maven2",
+          "checksum": {
+            "sha1": "345e595e0e22d8bb635bf8977a5fe1ee04c09715",
+            "sha256": "1ef2ed56af2d163c932c1d7bb5f1c9960716832f2fe664e10d457e4e1bcd46f3",
+            "sha512": "ac3c7960d5d149e1d0a0ca0fc004f0f834121fb35a4a407b034d0282f2a0c341c870ef79ebb5c7e31e08465007a00b4b17b85444d7c4a8839f0f097b14b33c70",
+            "md5": "591938b6b4c23d9fe767e5c7fe527837"
+          }
+        },
+        {
+          "downloadUrl": "http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2-openapi.json.md5",
+          "path": "com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2-openapi.json.md5",
+          "id": "c2FtcGxlLXJlcG86NDkzMWEyNDBjNWJhOTYxMTdkYTFmYTYwYmNjYWRjMzk",
+          "repository": "sample-repo",
+          "format": "maven2",
+          "checksum": {
+            "sha1": "24d06f8e65be82c2cea12b68bad5c53a7993acda",
+            "md5": "b94d6a0b72121f8d823d6d2ce3fb3071"
+          }
+        },
+        {
+          "downloadUrl": "http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2-openapi.json.sha1",
+          "path": "com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2-openapi.json.sha1",
+          "id": "c2FtcGxlLXJlcG86NjU2MTE5NDJlOTE2ZWJjN2ZlZDA4ZDI1NDgwMzkxMmU",
+          "repository": "sample-repo",
+          "format": "maven2",
+          "checksum": {
+            "sha1": "66db2debdb5d9d9d46905500a63525d641c9fa64",
+            "md5": "39ac3de4bab392443c80590f1b8151a6"
+          }
+        },
+        {
+          "downloadUrl": "http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2.pom",
+          "path": "com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2.pom",
+          "id": "c2FtcGxlLXJlcG86ZDgzMzAwNWQ0OWMzNDhlOGZlYWZjOThiNjM1ZjFhNjY",
+          "repository": "sample-repo",
+          "format": "maven2",
+          "checksum": {
+            "sha1": "2091fec7b9478fdfb049de1b61ad203bba47dedd",
+            "md5": "9e0f897d37139111076606f02d73cea7"
+          }
+        },
+        {
+          "downloadUrl": "http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2.pom.md5",
+          "path": "com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2.pom.md5",
+          "id": "c2FtcGxlLXJlcG86YmQ3Zjc5ZTE5NjczMDUwOGY2MjEwM2I1ZjhmMTYxNjc",
+          "repository": "sample-repo",
+          "format": "maven2",
+          "checksum": {
+            "sha1": "9ad40fb1042d42843bbaa10b888a13855bec2779",
+            "md5": "f00e62ebaa6fbf44e22dd49d891baefb"
+          }
+        },
+        {
+          "downloadUrl": "http://nexus/repository/sample-repo/com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2.pom.sha1",
+          "path": "com/sonalake/order-state-service/1.0.2/order-state-service-1.0.2.pom.sha1",
+          "id": "c2FtcGxlLXJlcG86MjdiOTA0YmE0MzFkOWU1ZWNmZTJlYmIwNDNlYTY2YzE",
+          "repository": "sample-repo",
+          "format": "maven2",
+          "checksum": {
+            "sha1": "48dc0390ac92c5b62d1f7ff8280fb4ce5fb06a83",
+            "md5": "b15f1bd77984bb6082cc0f85e6875cde"
+          }
+        }
+      ]
+    }
+  ],
+  "continuationToken": null
+}

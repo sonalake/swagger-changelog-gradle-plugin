@@ -1,0 +1,61 @@
+{
+  "totalCount": 2,
+  "from": -1,
+  "count": -1,
+  "tooManyResults": false,
+  "collapsed": false,
+  "repoDetails": [
+    {
+      "repositoryId": "releases",
+      "repositoryName": "Releases",
+      "repositoryContentClass": "maven2",
+      "repositoryKind": "hosted",
+      "repositoryPolicy": "RELEASE",
+      "repositoryURL": "http://nexus/service/local/repositories/releases"
+    }
+  ],
+  "data": [
+    {
+      "groupId": "com.sonalake",
+      "artifactId": "order-state-service",
+      "version": "1.0.2",
+      "latestRelease": "1.0.2",
+      "latestReleaseRepositoryId": "releases",
+      "artifactHits": [
+        {
+          "repositoryId": "releases",
+          "artifactLinks": [
+            {
+              "extension": "pom"
+            },
+            {
+              "classifier": "openapi",
+              "extension": "json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "groupId": "com.sonalake",
+      "artifactId": "order-state-service",
+      "version": "1.0.1",
+      "latestRelease": "1.0.2",
+      "latestReleaseRepositoryId": "releases",
+      "artifactHits": [
+        {
+          "repositoryId": "releases",
+          "artifactLinks": [
+            {
+              "extension": "pom"
+            },
+            {
+              "classifier": "openapi",
+              "extension": "json"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

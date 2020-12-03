@@ -9,13 +9,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.gradle.internal.impldep.org.codehaus.plexus.util.FileUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 
 import static com.deepoove.swagger.diff.SwaggerDiff.compareV2;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Given the config, collect and sort the swaggers from nexus, and produce both the diffs and their index file.
@@ -46,8 +46,9 @@ public class LogGenerator {
       .map(step -> buildSwaggerDiff(scanner, step))
       .filter(this::skipStepsWithNoChanges)
       .forEach(diff -> appendDiffToChangelog(index, diff));
-
+    guaranteeIndexFile(index);
   }
+
 
   /**
    * Build a difference-model between the two versions in the give step
@@ -61,6 +62,7 @@ public class LogGenerator {
     String fromUri = scanner.getVersionUri(step.getFrom());
     String toUri = scanner.getVersionUri(step.getTo());
 
+    System.out.println(String.format("Diffing %s -> %s", fromUri, toUri));
     log.debug("Diffing urls {} -> {}", fromUri, toUri);
 
     return compareV2(fromUri, toUri);
@@ -81,6 +83,21 @@ public class LogGenerator {
       log.debug("No diff for {} -> {}", diff.getOldVersion(), diff.getNewVersion());
     }
     return !hasNoChanges;
+  }
+
+  /**
+   * If we have no results, we want to write an empty changelog to show this
+   *
+   * @param index
+   */
+  private void guaranteeIndexFile(Path index) throws IOException {
+    if (!FileUtils.fileExists(index.toAbsolutePath().toString()))
+      Files.write(
+        index,
+        "No change history available".getBytes(StandardCharsets.UTF_8),
+        StandardOpenOption.CREATE,
+        StandardOpenOption.APPEND
+      );
   }
 
   /**

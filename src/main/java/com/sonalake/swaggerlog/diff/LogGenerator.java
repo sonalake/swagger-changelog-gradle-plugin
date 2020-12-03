@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.gradle.internal.impldep.org.codehaus.plexus.util.FileUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -45,8 +46,9 @@ public class LogGenerator {
       .map(step -> buildSwaggerDiff(scanner, step))
       .filter(this::skipStepsWithNoChanges)
       .forEach(diff -> appendDiffToChangelog(index, diff));
-
+    guaranteeIndexFile(index);
   }
+
 
   /**
    * Build a difference-model between the two versions in the give step
@@ -81,6 +83,21 @@ public class LogGenerator {
       log.debug("No diff for {} -> {}", diff.getOldVersion(), diff.getNewVersion());
     }
     return !hasNoChanges;
+  }
+
+  /**
+   * If we have no results, we want to write an empty changelog to show this
+   *
+   * @param index
+   */
+  private void guaranteeIndexFile(Path index) throws IOException {
+    if (!FileUtils.fileExists(index.toAbsolutePath().toString()))
+      Files.write(
+        index,
+        "No change history available".getBytes(StandardCharsets.UTF_8),
+        StandardOpenOption.CREATE,
+        StandardOpenOption.APPEND
+      );
   }
 
   /**

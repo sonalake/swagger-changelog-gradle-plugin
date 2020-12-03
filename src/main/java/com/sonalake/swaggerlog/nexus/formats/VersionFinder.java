@@ -60,7 +60,7 @@ public class VersionFinder {
     }
 
     HttpResponse<String> result = builder.asString();
-    if (result.getStatus() >=400) {
+    if (result.getStatus() >= 400) {
       throw new AssertionError(String.format("Request for config rejected (%s) by nexus: %s", result.getStatusText(), config));
     }
 
@@ -72,7 +72,6 @@ public class VersionFinder {
   private <T extends NexusResult> List<VersionedArtifact> parseNexusResults(HttpResponse<String> result, Class<T> format, Config config) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
     T resultObject = mapper.readValue(result.getBody(), format);
-    resultObject.validate();
     return resultObject.buildVersions(config);
   }
 }

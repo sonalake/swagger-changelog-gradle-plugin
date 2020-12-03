@@ -10,10 +10,10 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static com.google.common.collect.Iterables.isEmpty;
 import static java.lang.String.format;
 import static java.lang.String.join;
 import static java.util.Arrays.asList;
+import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
@@ -34,14 +34,14 @@ public class V2NexusResult implements NexusResult {
   @Override
   public List<VersionedArtifact> buildVersions(Config config) {
     // we derive our download URLs from this part of the result
-    Map<String, Repo> repos = repoDetails.stream().collect(Collectors.toMap(
+    Map<String, Repo> repos = emptyIfNull(repoDetails).stream().collect(Collectors.toMap(
       Repo::getRepositoryId,
       v -> v
     ));
 
     // now map the items to a versioned artifact, each will contain a download URL
-    // based on the classifer (or the first json entry) in the underlying "artifact hits"
-    return items
+    // based on the classifier (or the first json entry) in the underlying "artifact hits"
+    return emptyIfNull(items)
       .stream()
       .map(i -> {
 
@@ -54,16 +54,6 @@ public class V2NexusResult implements NexusResult {
           .build();
       }).collect(Collectors.toList());
 
-  }
-
-  @Override
-  public void validate() throws AssertionError {
-    if (null == this.getRepoDetails() || this.getRepoDetails().isEmpty()) {
-      throw new AssertionError("There are no repo details in the response");
-    }
-    if (null == this.getItems() || this.getItems().isEmpty()) {
-      throw new AssertionError("There are no items details in the response");
-    }
   }
 
 
@@ -122,9 +112,9 @@ public class V2NexusResult implements NexusResult {
       // if there is a classifier, then use it, otherwise we use the first json
       Predicate<ArtifactLink> checker = isNotEmpty(classifier) ?
         link -> Objects.equals(classifier, link.getClassifier())
-        : link -> "json" .equals(link.getExtension());
+        : link -> "json".equals(link.getExtension());
 
-      for (ArtifactHit hit : artifactHits) {
+      for (ArtifactHit hit : emptyIfNull(artifactHits)) {
         for (ArtifactLink link : hit.getArtifactLinks()) {
           if (checker.test(link)) {
             link.setRepositoryId(hit.getRepositoryId());

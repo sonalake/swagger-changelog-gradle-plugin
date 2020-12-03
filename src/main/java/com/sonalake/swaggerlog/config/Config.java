@@ -37,11 +37,11 @@ public class Config {
   // if this is set, it will be considered the _last_ version in the history
   private String snapshotVersionFile;
 
-  public String getNexusSearchPath() {
-    return nexusHome + "/service/local/lucene/search";
-  }
-
-  public String getNexusDownloadPath(String repository) {
-    return nexusHome + "/service/local/repositories/" + repository + "/content";
-  }
+  /**
+   * By default the tool will assume a V2 of the nexus search/download API, but setting this
+   * to true will tell it to use the V3 of the API
+   */
+  private boolean isVersion3;
 }
+
+

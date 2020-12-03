@@ -57,10 +57,12 @@ public class ChangelogExtension {
 
   /**
    * Path to the optional shapshot version file. This is the current, not as-yet released swagger.
-   *
+   * <p>
    * If this is set, it will be considered the _last_ version in the history
    */
   private String snapshotVersionFile;
+
+  private Boolean isNexusVersion3;
 
   public String getRepositoryId() {
     return repositoryId == null ? "releases" : repositoryId;
@@ -73,6 +75,7 @@ public class ChangelogExtension {
       .target(buildTarget())
       .snapshotVersionFile(getSnapshotVersionFile())
       .artifact(buildArtifact())
+      .isVersion3(Boolean.TRUE.equals(isNexusVersion3))
       .build();
   }
 

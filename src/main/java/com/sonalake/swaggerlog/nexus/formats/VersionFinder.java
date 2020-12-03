@@ -25,7 +25,7 @@ public class VersionFinder {
         return findNexus2Versions(config);
       }
 
-    } catch (UnirestException | IOException e) {
+    } catch (UnirestException | IOException | AssertionError e) {
       throw new IllegalArgumentException("Failed to parse results from nexus: " + config, e);
     }
 
@@ -33,7 +33,7 @@ public class VersionFinder {
 
 
   private List<VersionedArtifact> findNexus3Versions(Config config) throws UnirestException, IOException {
-    HttpRequest builder = Unirest.get(config.getNexusHome() + "/service/local/lucene/search")
+    HttpRequest builder = Unirest.get(config.getNexusHome() + "/service/rest/v1/search")
       .header("accept", "application/json")
       .queryString("repository", config.getRepositoryId())
       .queryString("group", config.getArtifact().getGroupId())
@@ -48,7 +48,7 @@ public class VersionFinder {
   }
 
   private List<VersionedArtifact> findNexus2Versions(Config config) throws UnirestException, IOException {
-    HttpRequest builder = Unirest.get(config.getNexusHome() + "/service/rest/v1/search")
+    HttpRequest builder = Unirest.get(config.getNexusHome() + "/service/local/lucene/search")
       .header("accept", "application/json")
       .queryString("g", config.getArtifact().getGroupId())
       .queryString("a", config.getArtifact().getArtifactId())
@@ -59,6 +59,11 @@ public class VersionFinder {
       builder.queryString("c", config.getArtifact().getClassifier());
     }
 
+    HttpResponse<String> result = builder.asString();
+    if (result.getStatus() >=400) {
+      throw new AssertionError(String.format("Request for config rejected (%s) by nexus: %s", result.getStatusText(), config));
+    }
+
 
     return parseNexusResults(builder.asString(), V2NexusResult.class, config);
   }
@@ -67,6 +72,7 @@ public class VersionFinder {
   private <T extends NexusResult> List<VersionedArtifact> parseNexusResults(HttpResponse<String> result, Class<T> format, Config config) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
     T resultObject = mapper.readValue(result.getBody(), format);
+    resultObject.validate();
     return resultObject.buildVersions(config);
   }
 }

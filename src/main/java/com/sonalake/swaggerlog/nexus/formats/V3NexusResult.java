@@ -9,6 +9,7 @@ import lombok.Data;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Iterables.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 
@@ -45,6 +46,13 @@ public class V3NexusResult implements NexusResult {
           .build();
       })
       .collect(Collectors.toList());
+  }
+
+  @Override
+  public void validate() throws AssertionError {
+    if (isEmpty(this.items)) {
+      throw new AssertionError("There are no items details in the response");
+    }
   }
 
 

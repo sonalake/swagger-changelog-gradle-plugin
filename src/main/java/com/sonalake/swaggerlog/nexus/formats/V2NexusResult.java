@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Iterables.isEmpty;
 import static java.lang.String.format;
 import static java.lang.String.join;
 import static java.util.Arrays.asList;
@@ -53,6 +54,16 @@ public class V2NexusResult implements NexusResult {
           .build();
       }).collect(Collectors.toList());
 
+  }
+
+  @Override
+  public void validate() throws AssertionError {
+    if (null == this.getRepoDetails() || this.getRepoDetails().isEmpty()) {
+      throw new AssertionError("There are no repo details in the response");
+    }
+    if (null == this.getItems() || this.getItems().isEmpty()) {
+      throw new AssertionError("There are no items details in the response");
+    }
   }
 
 

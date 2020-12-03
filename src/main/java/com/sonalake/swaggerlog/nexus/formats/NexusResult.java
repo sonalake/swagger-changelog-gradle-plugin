@@ -16,4 +16,9 @@ public interface NexusResult {
    * @return the versioned artifacts
    */
   List<VersionedArtifact> buildVersions(Config config);
+
+  /**
+   * Check if there's enough data in here to do anything
+   */
+  void validate() throws AssertionError;
 }

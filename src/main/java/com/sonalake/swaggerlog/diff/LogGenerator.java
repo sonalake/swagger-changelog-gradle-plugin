@@ -60,6 +60,7 @@ public class LogGenerator {
     String fromUri = scanner.getVersionUri(step.getFrom());
     String toUri = scanner.getVersionUri(step.getTo());
 
+    System.out.println(String.format("Diffing %s -> %s", fromUri, toUri));
     log.debug("Diffing urls {} -> {}", fromUri, toUri);
 
     return compareV2(fromUri, toUri);

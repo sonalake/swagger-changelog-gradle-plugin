@@ -1,3 +1,10 @@
+buildscript {
+  repositories {
+    maven { url "http://repo.spring.io/libs-release" }
+    mavenCentral()
+  }
+}
+
 plugins {
   id 'java'
   id 'com.github.kt3k.coveralls' version '2.10.1'
@@ -5,10 +12,7 @@ plugins {
   id 'com.gradle.plugin-publish' version '0.12.0'
   id "io.freefair.lombok" version "4.1.6"
 }
-repositories {
-  mavenCentral()
-  jcenter()
-}
+
 group = 'com.sonalake'
 version = '1.0.4-SNAPSHOT'
 sourceCompatibility = '11'

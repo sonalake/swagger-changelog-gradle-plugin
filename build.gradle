@@ -1,5 +1,6 @@
 buildscript {
   repositories {
+    jcenter()
     maven { url "http://repo.spring.io/libs-release" }
     mavenCentral()
   }
@@ -40,6 +41,7 @@ ext.isForPluginPublishing = isParameterDefined('gradle.publish.key') && isParame
 
 
 repositories {
+  jcenter()
   mavenCentral()
   maven { url "https://repo.spring.io/plugins-release/" }
   maven { url "https://maven.geomajas.org/" }

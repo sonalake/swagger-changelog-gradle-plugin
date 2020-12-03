@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.gradle.internal.impldep.org.codehaus.plexus.util.FileUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -91,7 +90,7 @@ public class LogGenerator {
    * @param index
    */
   private void guaranteeIndexFile(Path index) throws IOException {
-    if (!FileUtils.fileExists(index.toAbsolutePath().toString()))
+    if (!index.toFile().exists())
       Files.write(
         index,
         "No change history available".getBytes(StandardCharsets.UTF_8),
